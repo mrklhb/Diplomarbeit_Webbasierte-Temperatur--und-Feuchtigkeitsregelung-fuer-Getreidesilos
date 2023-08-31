@@ -78,19 +78,16 @@ void loop() {
   Serial.print(bme.humidity);
   Serial.println(F(" %"));
 
-  packet_Temp = String(bme.temperature);
+  packet_Temp = String(bme.temperature); 
   packet_Humidity = String(bme.humidity);
 
     //##Packet senden##
     Udp.beginPacket("172.16.2.19", localPort);     // hier die IP-Adresse vom "IPTest.ino" festlegen
-    Udp.print(packet_Temp);
+    Udp.print(packet_Temp + "!" + packet_Humidity);
+    Serial.println(packet_Temp + "!" + packet_Humidity);
     Serial.println("Packet Temperatur gesendet");
     Udp.endPacket();
 
-    Udp.beginPacket("172.16.2.19", localPort);     // hier die IP-Adresse vom "IPTest.ino" festlegen
-    Udp.print(packet_Humidity);
-    Serial.println("Packet Feuchtigkeit gesendet");
-    Udp.endPacket();
     
   Serial.println();
   delay(2000);
