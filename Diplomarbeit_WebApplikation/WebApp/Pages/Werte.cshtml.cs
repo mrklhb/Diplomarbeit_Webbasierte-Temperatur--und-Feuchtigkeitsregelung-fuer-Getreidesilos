@@ -15,18 +15,20 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataRead
+
+namespace WebApp.Pages
 {
-    class Read
+    public interface IDataRead { void ReceiveAsync(); }
+    public class DataRead : IDataRead
     {
         private int port = 9999;
         private UdpClient udpClient;
         public string msg;
         public string[] splitted;
-        public decimal Temperature {get; set; }
-        public decimal Humidity {get; set; }
+        public decimal Temperature { get; set; }
+        public decimal Humidity { get; set; }
 
-        private async void ReceiveAsync()
+        public async void ReceiveAsync()
         {
             while (true)
             {
@@ -43,17 +45,11 @@ namespace DataRead
         }
 
     }
-    
-}
-
-namespace WebApp.Pages
-{
-    
-    public class WerteModel : PageModel
+    public class WerteModel : PageModel, DataRead
     {
         public void OnGet(decimal temperature, decimal humidity)
         {
-            Temperatur = temperature;
+            Temperature = temperature;
             Humidity = humidity;
         }
     }
