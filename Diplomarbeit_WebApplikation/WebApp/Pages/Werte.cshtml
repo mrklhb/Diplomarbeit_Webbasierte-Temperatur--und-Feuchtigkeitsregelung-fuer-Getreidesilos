@@ -1,4 +1,52 @@
 ﻿@page
 @model WebApp.Pages.WerteModel
-@{
-}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Temperatur und Feuchtigkeit</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="temperatureHumidityChart" width="400" height="200"></canvas>
+    <script>
+        var ctx = document.getElementById('temperatureHumidityChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.TimeStamps)),
+                datasets: [
+                    {
+                        label: 'Temperatur (°C)',
+                        data: @Html.Raw(Json.Serialize(Model.TemperatureData)),
+                        borderColor: 'red',
+                        fill: false
+                    },
+                    {
+                        label: 'Feuchtigkeit (%)',
+                        data: @Html.Raw(Json.Serialize(Model.HumidityData)),
+                        borderColor: 'blue',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: [{
+                        type: 'time',
+                        time: {
+                            unit: 'second'
+                        },
+                        distribution: 'linear'
+                    }],
+                    y: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+</body>
+</html>}

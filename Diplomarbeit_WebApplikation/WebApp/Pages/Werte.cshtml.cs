@@ -18,8 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApp.Pages
 {
-    public interface IDataRead { void ReceiveAsync(); }
-    public class DataRead : IDataRead
+    public class WerteModel : PageModel
     {
         private int port = 9999;
         private UdpClient udpClient;
@@ -27,14 +26,13 @@ namespace WebApp.Pages
         public string[] splitted;
         public decimal Temperature { get; set; }
         public decimal Humidity { get; set; }
-
+        
         public async void ReceiveAsync()
         {
             while (true)
             {
                 UdpReceiveResult result = await udpClient.ReceiveAsync();
                 msg = Encoding.UTF8.GetString(result.Buffer);
-                splitted = msg.Split("!");
                 if (splitted.Length < 6)
                 {
                     continue;
@@ -44,13 +42,17 @@ namespace WebApp.Pages
             }
         }
 
-    }
-    public class WerteModel : PageModel, DataRead
-    {
+        public List<DateTime> TimeStamps { get; set; }
+        public List<double> TemperatureData { get; set; }
+        public List<double> HumidityData { get; set; }
+
         public void OnGet(decimal temperature, decimal humidity)
         {
-            Temperature = temperature;
-            Humidity = humidity;
-        }
+            TimeStamps = new List<DateTime>
+            {
+                DateTime.Now.AddSeconds(-10),
+                DateTime.Now.AddSeconds(-9),
+                DateTime.Now.AddSeconds(-8),
+            }
     }
 }
