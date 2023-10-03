@@ -20,39 +20,15 @@ namespace WebApp.Pages
 {
     public class WerteModel : PageModel
     {
-        private int port = 9999;
-        private UdpClient udpClient;
-        public string msg;
-        public string[] splitted;
-        public decimal Temperature { get; set; }
-        public decimal Humidity { get; set; }
-        
-        public async void ReceiveAsync()
+        private GetArduinoData getArduinoData = new GetArduinoData();
+
+        public string Temperature { get; set; }
+        public string Humidity { get; set; }    
+
+        public void OnGet()
         {
-            while (true)
-            {
-                UdpReceiveResult result = await udpClient.ReceiveAsync();
-                msg = Encoding.UTF8.GetString(result.Buffer);
-                if (splitted.Length < 6)
-                {
-                    continue;
-                }
-                Temperature = decimal.Parse(splitted[0]);
-                Humidity = decimal.Parse(splitted[1]);
-            }
+            this.Temperature = getArduinoData.Temperature;
+            this.Humidity = getArduinoData.Humidity;
         }
-
-        public List<DateTime> TimeStamps { get; set; }
-        public List<double> TemperatureData { get; set; }
-        public List<double> HumidityData { get; set; }
-
-        public void OnGet(decimal temperature, decimal humidity)
-        {
-            TimeStamps = new List<DateTime>
-            {
-                DateTime.Now.AddSeconds(-10),
-                DateTime.Now.AddSeconds(-9),
-                DateTime.Now.AddSeconds(-8),
-            }
     }
 }
