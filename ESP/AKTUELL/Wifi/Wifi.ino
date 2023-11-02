@@ -6,12 +6,23 @@
 #include <Adafruit_Sensor.h>
 #include "Adafruit_BME680.h"
 
+unsigned long previousMillisFan = 0;
+unsigned long previousMillisPrint = 0;
+const long intervalFan = 100;
+const long intervalPrint = 5000;
+
 Adafruit_BME680 bme; // I2C
 
 #include "arduino_secrets.h"
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;  // your network SSID (name)
 char pass[] = SECRET_PASS;  // your network password (use for WPA, or use as key for WEP)
+#define FAN1        25
+#define PWM_CH_FAN  1
+#define PWM_RES     8
+String modi = "";
+int PWM1_DutyCycle = 0;
+
 
 void initWiFi() {
   WiFi.mode(WIFI_STA);
@@ -24,13 +35,15 @@ void initWiFi() {
   Serial.println(WiFi.localIP());
 }
 WiFiUDP Udp;
-unsigned int localPort = 8585;      // Portnummer
+unsigned int localPort = 9999;      // Portnummer
 String packet_Temp;
 String packet_Humidity;
 
 
 void setup() {
   Serial.begin(9600);
+  ledcSetup(PWM_CH_FAN, 5000, PWM_RES);
+  ledcAttachPin(FAN1, PWM_CH_FAN);
   while (!Serial);
   Serial.println(F("BME680 async test"));
 
@@ -49,7 +62,31 @@ void setup() {
 }
 
 void loop() {
-   // Tell BME680 to begin measurement.
+  unsigned long currentMillisFan = millis();
+  unsigned long currentMillisPrint = millis();
+  if (currentMillisFan - previousMillisFan >= intervalFan){
+    previousMillisFan = currentMillisFan; 
+    if (Serial.available() > 0) {
+    modi = Serial.readStringUntil('\n');
+    Serial.println(modi);
+    if (modi.equals("on")) {
+    ledcWrite(PWM_CH_FAN, 255);
+
+    }
+    else if (modi.equals("middle")) {
+    ledcWrite(PWM_CH_FAN, 125);
+
+    }
+    else {
+      ledcWrite(PWM_CH_FAN, 0);
+
+    }
+  }
+  }
+
+   if (currentMillisPrint - previousMillisPrint >= intervalPrint){
+    previousMillisPrint = currentMillisPrint;
+    // Tell BME680 to begin measurement.
   unsigned long endTime = bme.beginReading();
   if (endTime == 0) {
     Serial.println(F("Failed to begin reading :("));
@@ -82,7 +119,7 @@ void loop() {
   packet_Humidity = String(bme.humidity);
 
     //##Packet senden##
-    Udp.beginPacket("172.16.2.19", localPort);     // hier die IP-Adresse vom "IPTest.ino" festlegen
+    Udp.beginPacket("255.255.255.255", localPort);     // hier die IP-Adresse vom "IPTest.ino" festlegen
     Udp.print(packet_Temp + "!" + packet_Humidity);
     Serial.println(packet_Temp + "!" + packet_Humidity);
     Serial.println("Packet Temperatur gesendet");
@@ -90,8 +127,13 @@ void loop() {
 
     
   Serial.println();
-  delay(2000);
+  
+  }
 }
+  
+   
+
+
 
 void printWifiStatus() {
   // print the SSID of the network you're attached to:
