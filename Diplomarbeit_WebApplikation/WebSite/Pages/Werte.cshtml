@@ -1,0 +1,29 @@
+﻿@page
+@model WebSite.Pages.WerteModel
+@{
+}
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <meta http-equiv="refresh" content="10" />
+    <h1>Temperatur- und Feuchtigkeitswerte</h1>
+    <div style="display: flex;">
+        <div style="margin-right: 20px;">
+            <h2>Temperatur</h2>
+            <div class="text-danger">
+                <div>@Model.Temperature°C</div>
+            </div>
+        </div>
+        <div style="margin-right: 20px;">
+            <h2>Feuchtigkeit</h2>
+            <div class="text-danger">
+                <div>@Model.Humidity%</div>
+            </div>
+        </div>
+    </div>
+</body>
+

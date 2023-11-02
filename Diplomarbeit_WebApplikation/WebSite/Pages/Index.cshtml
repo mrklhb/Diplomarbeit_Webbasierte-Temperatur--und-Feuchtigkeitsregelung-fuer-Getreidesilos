@@ -1,0 +1,66 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@functions {
+    public string Date
+    {
+        get
+        {
+            return DateTime.Today.ToLongDateString();
+        }
+    }
+
+    public string Time
+    {
+        get
+        {
+            return DateTime.Now.ToShortTimeString();
+        }
+    }
+}
+
+<head>
+    <meta http-equiv="refresh" content="5" />
+
+</head>
+<div class="text-center">
+    <br />
+    <br />
+    <br />
+    <h1 class="display-4">Herzlich Willkommen</h1>
+    <br />
+    <div>
+        Heute ist  @Date und es ist @Time Uhr
+    </div>
+    <br>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="./4IT.jpg" class="d-block w-100" alt="Bild der 4IT19">
+            </div>
+            <div class="carousel-item">
+                <img src="./3IT.jpg" class="d-block w-100" alt="Bild der 3IT19">
+            </div>
+            <div class="carousel-item">
+                <img src="./2IT.jpg" class="d-block w-100" alt="Bild der 2IT19">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
