@@ -13,7 +13,7 @@ namespace WebSite
         private int port = 9999;
         private IPEndPoint receiveAdr;    // IP: 0.0.0.0
         private UdpClient udpClient;
-        
+
         // neue Empfangstheorie
         private bool _isReceiving;
         private UdpClient _udpClient;
@@ -26,40 +26,36 @@ namespace WebSite
             // ReceiveAsync();
             _ = StartReceivingData();
         }
-        //private async void ReceiveAsync()
-        //{
-        //    while (true)
-        //    {
-        //        UdpReceiveResult result = await udpClient.ReceiveAsync();
-        //        string msg = Encoding.UTF8.GetString(result.Buffer);
-        //        string[] splitted = msg.Split("!");
-        //        if (splitted.Length < 6)
-        //        {
-        //            continue;
-        //        }
-        //        Temperature = splitted[0];
-        //        Humidity = splitted[1];
-        //    }
-        //}
 
-        private async Task StartReceivingData()
+        private async Task StartReceivingData() // wird regelmäßig aufgerufen
         {
+            Temperature = "nA.";
+            Humidity = "nA.";
             _isReceiving = true;
-            _udpClient = new UdpClient(port);
+            //
             _cancellationTokenSource = new CancellationTokenSource();
-
-            await Task.Run(async () =>
+            int c = 0;
+            while (_isReceiving) // braucht ihr die Schleife? wird sowieso regelmäßig aufgerufen!
             {
-                while (_isReceiving)
+                await Task.Run(async () =>
                 {
+                    c++;
+                    Temperature = c.ToString();
                     try
                     {
-                        var receivedData = await _udpClient.ReceiveAsync();
-                        string msg = Encoding.UTF8.GetString(receivedData.Buffer);
-                        string[] splitted = msg.Split("!");
-                        Temperature = splitted[0];
-                        Humidity = splitted[1];
+                        _udpClient = new UdpClient(port); // wenn hier nichts kommt, dann ist die Message leer --> Temperatur und Humidity werden geleert, aber oben wieder mit "nA." gefuellt.
+                        if (_udpClient.Available > 0)
+                        {
+                            var receivedData = await _udpClient.ReceiveAsync();
+                            string msg = Encoding.UTF8.GetString(receivedData.Buffer);
 
+                            if (msg.Length > 0)
+                            {
+                                string[] splitted = msg.Split("!");
+                                Temperature = splitted[0];
+                                Humidity = splitted[1];
+                            }
+                        }
                     }
                     catch (SocketException se)
                     {
@@ -73,8 +69,9 @@ namespace WebSite
                     {
                         Console.WriteLine($"Error: {ex}");
                     }
-                }
-            });
+
+                });
+            }
         }
     }
 }
