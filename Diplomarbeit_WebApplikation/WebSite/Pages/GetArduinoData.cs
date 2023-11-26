@@ -10,7 +10,7 @@ namespace WebSite
         public string Temperature { get; set; }
         public string Humidity { get; set; }
 
-        private int port = 8585;
+        private int port = 19191;
         private IPEndPoint receiveAdr;    // IP: 0.0.0.0
         private UdpClient udpClient;
 
@@ -29,8 +29,8 @@ namespace WebSite
 
         private async Task StartReceivingData() // wird regelmäßig aufgerufen
         {
-            Temperature = "nA.";
-            Humidity = "nA.";
+            Temperature = "No data available";
+            Humidity = "No data available";
             _isReceiving = true;
             //
             _cancellationTokenSource = new CancellationTokenSource();
@@ -40,7 +40,7 @@ namespace WebSite
                 await Task.Run(async () =>
                 {
                     c++;
-                    Temperature = c.ToString();
+                    Temperature = "Testdurchlauf + " + c.ToString();
                     try
                     {
                         _udpClient = new UdpClient(port); // wenn hier nichts kommt, dann ist die Message leer --> Temperatur und Humidity werden geleert, aber oben wieder mit "nA." gefuellt.
