@@ -10,7 +10,7 @@ namespace WebSite
         public string Temperature { get; set; }
         public string Humidity { get; set; }
 
-        private int port = 9999;
+        private int port = 8585;
         private IPEndPoint receiveAdr;    // IP: 0.0.0.0
         private UdpClient udpClient;
 
