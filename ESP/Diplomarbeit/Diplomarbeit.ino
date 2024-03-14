@@ -102,6 +102,9 @@ void calculateAverages() {
 
     events.send(String(avgTemperature).c_str(), "avgTemperature", millis());
     events.send(String(avgHumidity).c_str(), "avgHumidity", millis());
+    temperatureSum = humiditySum = temperatureSumSPI = humiditySumSPI = temperatureSumSPI2 = humiditySumSPI2 = 0;
+    dataPointsCount = dataPointsCountSPI = dataPointsCountSPI2 = 0;
+
   }
 }
 
@@ -161,26 +164,27 @@ body {
 }
 
 .content {
-  padding: 20px;
-}
+    padding: 20px;
+    text-align: center; 
+  }
 
 .cards {
   max-width: 700px; 
   margin: 0 auto; 
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 Spalten */
-  grid-gap: 1rem; /* Abstand zwischen Karten */
+  grid-template-columns: repeat(2, 1fr); 
+  grid-gap: 1rem; 
 }
 
 .card {
   background-color: white; 
   box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
-  border: 5px solid; /* Fügt den Rand hinzu */
+  border: 5px solid; 
   margin: 10px;
   padding: 10px;
 }
 
-/* Farben der Rahmen */
+
 .card.temperature.top, .card.humidity.top { border-color: #FF0000; } /* Rot */
 .card.temperature.middle, .card.humidity.middle { border-color: #FFD700; } /* Gelb */
 .card.temperature.bottom, .card.humidity.bottom { border-color: #008000; } /* Grün */
@@ -212,15 +216,17 @@ body {
   background-color: #f44336;
 }
 
-canvas {
-  max-width: 400px; 
-  max-height: 200px;
-}
+ canvas {
+    min-width: 500px;
+    min-height: 300px;
+    display: block; 
+    margin: 20px auto; 
+  }
 
-/* Responsive Anpassungen */
+
 @media (max-width: 600px) {
   .cards {
-    grid-template-columns: 1fr; /* 1 Spalte auf kleineren Bildschirmen */
+    grid-template-columns: 1fr; 
   }
 }
   </style>
@@ -353,7 +359,7 @@ source.addEventListener('humiditySPI2', function(e) {
 
 
 
-     // Setzen der Canvas-Größe nach dem Laden der Seite
+     // Setzt der Canvas-Größe nach dem Laden der Seite
      window.addEventListener('load', function() {
        document.getElementById('temperatureChart').width = 300;
        document.getElementById('temperatureChart').height = 150;
@@ -361,7 +367,7 @@ source.addEventListener('humiditySPI2', function(e) {
        document.getElementById('humidityChart').height = 150;
        
 
-       // Lade zuvor gespeicherte Daten beim Laden der Seite
+       // Ladet zuvor gespeicherte Daten beim Laden der Seite
        var storedTemperatureData = JSON.parse(localStorage.getItem('temperatureData')) || [];
        var storedHumidityData = JSON.parse(localStorage.getItem('humidityData')) || [];
 
@@ -369,7 +375,7 @@ source.addEventListener('humiditySPI2', function(e) {
        var storedHumidityDataSPI = JSON.parse(localStorage.getItem('humidityDataSPI')) || [];
 
        var storedAvgTemperatureData = JSON.parse(localStorage.getItem('avgTemperatureData')) || [];
-  var storedAvgHumidityData = JSON.parse(localStorage.getItem('avgHumidityData')) || [];
+       var storedAvgHumidityData = JSON.parse(localStorage.getItem('avgHumidityData')) || [];
 
   storedAvgTemperatureData.forEach(function(value, index) {
     updateChart(chartAvgOfAvgs, value, index);
@@ -379,7 +385,7 @@ source.addEventListener('humiditySPI2', function(e) {
     updateChart(chartAvgOfAvgsHumidity, value, index);
   });
 
-       // Füge zuvor gespeicherte Daten zu den Diagrammen hinzu
+       // Fügt zuvor gespeicherte Daten zu den Diagrammen hinzu
        storedTemperatureData.forEach(function(value, index) {
          updateChart(chartTemperature, value, index);
        });
@@ -538,7 +544,7 @@ function storeAvgOfAvgsHumidity(humidity) {
      }
 
      function resetChartData() {
-  // Setze die Daten der Diagramme zurück
+  // Setzt die Daten der Diagramme zurück
   chartAvgOfAvgs.data.labels = [];
   chartAvgOfAvgs.data.datasets[0].data = [];
   chartAvgOfAvgs.update();
