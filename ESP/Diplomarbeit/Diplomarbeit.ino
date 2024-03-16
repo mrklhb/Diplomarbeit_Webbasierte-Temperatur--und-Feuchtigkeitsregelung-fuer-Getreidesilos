@@ -46,7 +46,7 @@ AsyncWebServer server(80);
 AsyncEventSource events("/events");
 
 unsigned long lastTime = 0;
-unsigned long timerDelay = 5000;  // send readings timer
+unsigned long timerDelay = 120000;  // send readings timer
 
 void getBME680Readings() {
   unsigned long endTime = bme.beginReading();
